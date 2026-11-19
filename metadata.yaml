@@ -1,0 +1,15 @@
+name: astrbot_plugin_physical_presence
+display_name: 现实人生
+desc: 一个插件管完虚拟伴侣的大时间表、虚拟日程、穿搭、主动消息、回复延迟与身体现场；她有自己的日程和主动性，你在哪由你自己说，不替你造分身。
+version: v2.3.3
+author: pierce（引擎部分基于 Florance 的 astrbot_plugin_virtual_life，GPL-3.0）
+repo: ""
+astrbot_version: ">=4.26.0"
+support_platforms:
+  - aiocqhttp
+  - telegram
+  - wecom
+  - lark
+  - dingtalk
+  - kook
+  - webchat
