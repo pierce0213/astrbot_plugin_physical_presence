@@ -13,16 +13,18 @@ from typing import Any
 
 from .constants import HOLDER_LABELS, normalize_holder
 
-HOME_KEYS = {"home", "kitchen", "yard"}
+HOME_KEYS = {"home", "kitchen", "yard", "bedroom"}
 
 
 def same_place(a: str, b: str) -> bool:
-    """家里 / 厨房 / 院子算同一个屋檐下；其他地点按 key 严格比较。"""
+    """客厅/厨房/院子算同一个屋檐下；卧室是独立房间，不能隔墙碰到。"""
 
     if not a or not b:
         return False
     if a == b:
         return True
+    if "bedroom" in {a, b}:
+        return False
     return a in HOME_KEYS and b in HOME_KEYS
 
 

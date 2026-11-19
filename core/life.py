@@ -60,7 +60,7 @@ STUDENT_BLOCKS = [
     LifeBlock("17:40", "18:20", "convenience", "买瓶水，顺手在冷柜前站一会儿", True),
     LifeBlock("18:20", "19:20", "home", "一起做晚饭，锅里的水刚开", True),
     LifeBlock("19:20", "22:30", "home", "在茶几边写作业，电视开着没看", True),
-    LifeBlock("22:30", "07:00", "home", "睡下，被子拉到下巴", True),
+    LifeBlock("22:30", "07:00", "bedroom", "睡下，被子拉到下巴", True),
 ]
 
 WORKER_BLOCKS = [

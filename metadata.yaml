@@ -2,7 +2,7 @@ name: astrbot_plugin_physical_presence
 display_name: 现实人生
 short_desc: 虚拟伴侣的现实身体现场：日程、穿搭、主动消息、道具与接触
 desc: 一个插件管完虚拟伴侣的大时间表、虚拟日程、穿搭、主动消息、回复延迟与身体现场；她有自己的日程和主动性，你在哪由你自己说，不替你造分身。
-version: 2.3.3
+version: 2.3.4
 author: pierce
 repo: https://github.com/pierce0213/astrbot_plugin_physical_presence
 astrbot_version: ">=4.26.0"

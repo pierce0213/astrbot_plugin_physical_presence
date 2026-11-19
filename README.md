@@ -1,4 +1,4 @@
-# 现实人生・astrbot\_plugin\_physical\_presence v2.3.3
+# 现实人生・astrbot\_plugin\_physical\_presence v2.3.4
 
 > GitHub：<https://github.com/pierce0213/astrbot_plugin_physical_presence>
 > 插件市场：搜索「现实人生」即可安装（发布页：<https://cloud.astrbot.app/publish>）

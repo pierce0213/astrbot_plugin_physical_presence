@@ -2362,6 +2362,13 @@ class PhysicalPresencePlugin(Star):
                     "range": life_block.label(),
                 }
 
+        activity_text = str(block.get("activity") or "")
+        if preset and preset.key == "home" and any(
+            word in activity_text for word in ("睡下", "睡觉", "躺下", "床上", "睡前")
+        ):
+            preset = get_place("bedroom")
+            block["location"] = preset.name
+
         if preset is None:
             if not state.outfit:
                 state.outfit = outfit_for(now, settings.identity)

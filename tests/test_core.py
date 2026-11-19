@@ -15,7 +15,7 @@ sys.path.insert(0, str(PLUGIN_DIR))
 from core.context import build_injection  # noqa: E402
 from core.guard import de_mediate, ensure_action, strip_away_contact  # noqa: E402
 from core.life import build_plan  # noqa: E402
-from core.models import PresenceState, props_from_config  # noqa: E402
+from core.models import PresenceState, props_from_config, same_place  # noqa: E402
 from core.parser import extract_state_block, heuristic_patch  # noqa: E402
 from core.pipeline import process_output  # noqa: E402
 from core.places import get_place, match_place  # noqa: E402
@@ -100,6 +100,10 @@ class UserStateTest(unittest.TestCase):
         self.assertTrue(state.together)
         self.assertEqual(state.user_place_key, "home")
         self.assertIn("你在家里", render_state(state, NOW, RuntimeSettings()))
+
+    def test_bedroom_is_not_living_room(self) -> None:
+        self.assertFalse(same_place("home", "bedroom"))
+        self.assertTrue(same_place("bedroom", "bedroom"))
 
     def test_she_leads_and_short_protocol(self) -> None:
         protocol = render_protocol(RuntimeSettings(), together=True)
@@ -304,8 +308,15 @@ class LifeTest(unittest.TestCase):
         self.assertEqual(match_place("教学楼 302").key, "classroom")
         self.assertEqual(match_place("第二食堂").key, "canteen")
         self.assertEqual(match_place("宿舍书桌").key, "home")
+        self.assertEqual(match_place("卧室").key, "bedroom")
         self.assertEqual(match_place("公交 27 路").key, "bus")
         self.assertEqual(match_place("旧书街区").key, "street")
+
+    def test_sleep_block_is_bedroom(self) -> None:
+        plan = build_plan("学生", "together")
+        block = plan.block_at(datetime(2026, 11, 18, 22, 36))
+        self.assertEqual(block.place_key, "bedroom")
+        self.assertIn("睡", block.activity)
 
     def test_virtual_life_reader(self) -> None:
         plan = {
