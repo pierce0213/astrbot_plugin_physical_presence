@@ -76,6 +76,7 @@ from .core.user_state import (
     apply_user_action,
     detect_user_location,
     detect_user_pose,
+    says_near_her,
 )
 from .core.virtual_life import VirtualLifeReader
 
@@ -2491,6 +2492,8 @@ class PhysicalPresencePlugin(Star):
             async with self._lock:
                 state = self._ensure_state(key, now, settings)
                 said_place = detect_user_location(event.get_message_str())
+                if says_near_her(event.get_message_str()):
+                    said_place = (state.place_key, state.scene_place)
                 if said_place:
                     state.set_user_place(*said_place)
                     logger.info(

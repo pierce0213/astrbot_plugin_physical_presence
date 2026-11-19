@@ -26,11 +26,20 @@ _PATTERNS: tuple[tuple[str, str, str], ...] = (
         "外面",
     ),
     (
-        _CLAUSE + r"(?:在家|在家里|在客厅|在卧室|在厨房|在院子|在书房|在沙发上|在床上|在宿舍|在寝室)",
+        _CLAUSE + r"(?:在卧室|在床上|在床边|在床|在被子|在枕头|在宿舍(?!书桌)|在寝室|宿舍床上)",
+        "bedroom",
+        "卧室",
+    ),
+    (
+        _CLAUSE + r"(?:在家|在家里|在客厅|在厨房|在院子|在书房|在沙发上|在宿舍书桌)",
         "home",
         "家里",
     ),
     (_CLAUSE + r"(?:回家了|到家了|回来了|刚到家)", "home", "家里"),
+)
+
+_NEAR_HER_RE = re.compile(
+    r"我[^，,。；;！!？?\n]{0,6}(?:就在|在|坐|站|靠|躺|蹲)你(?:旁边|身边|这里|这儿|那儿)"
 )
 
 _LOCATION_RE = [(re.compile(pattern), key, label) for pattern, key, label in _PATTERNS]
@@ -93,6 +102,12 @@ def detect_user_location(text: str | None) -> tuple[str, str] | None:
             if get_place(key) is not None:
                 return key, label
     return None
+
+
+def says_near_her(text: str | None) -> bool:
+    """用户明说“我就在你旁边/你这里”，这时他就在她当前的地点。"""
+
+    return isinstance(text, str) and bool(_NEAR_HER_RE.search(text))
 
 
 def user_accepts(text: str | None) -> bool:
