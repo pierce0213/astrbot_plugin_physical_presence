@@ -76,7 +76,8 @@ from .core.user_state import (
     apply_user_action,
     detect_user_location,
     detect_user_pose,
-    says_near_her,
+    says_not_there,
+    user_arrives,
 )
 from .core.virtual_life import VirtualLifeReader
 
@@ -2491,18 +2492,6 @@ class PhysicalPresencePlugin(Star):
             key = self._state_key(event, settings)
             async with self._lock:
                 state = self._ensure_state(key, now, settings)
-                said_place = detect_user_location(event.get_message_str())
-                if says_near_her(event.get_message_str()):
-                    said_place = (state.place_key, state.scene_place)
-                if said_place:
-                    state.set_user_place(*said_place)
-                    logger.info(
-                        "[现实] 用户自述位置 -> %s（%s）", said_place[1], said_place[0]
-                    )
-                said_pose = detect_user_pose(event.get_message_str())
-                if said_pose:
-                    state.you_pose = said_pose
-                    state.user_pose_known = True
                 activity, location = self._rewrite_injected_parts(req, settings)
                 self._sync_life(
                     state,
@@ -2512,6 +2501,21 @@ class PhysicalPresencePlugin(Star):
                     location,
                     event.get_extra("virtual_life_plan_persona_id", ""),
                 )
+                text = event.get_message_str()
+                said_place = detect_user_location(text)
+                if user_arrives(text) and not said_place:
+                    said_place = (state.place_key, state.scene_place)
+                elif says_not_there(text) and not said_place:
+                    said_place = ("home", "家里")
+                if said_place:
+                    state.set_user_place(*said_place)
+                    logger.info(
+                        "[现实] 用户自述位置 -> %s（%s）", said_place[1], said_place[0]
+                    )
+                said_pose = detect_user_pose(text)
+                if said_pose:
+                    state.you_pose = said_pose
+                    state.user_pose_known = True
                 self._align_injected_activity(req, activity, state.activity)
                 if state.together:
                     self._apply_user_action(state, event.get_message_str())

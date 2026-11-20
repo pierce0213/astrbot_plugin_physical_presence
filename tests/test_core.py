@@ -26,7 +26,9 @@ from core.user_state import (  # noqa: E402
     detect_user_location,
     detect_user_pose,
     says_near_her,
+    says_not_there,
     user_accepts,
+    user_arrives,
 )
 from core.virtual_life import VirtualLifeReader  # noqa: E402
 
@@ -61,8 +63,18 @@ class UserStateTest(unittest.TestCase):
         self.assertEqual(detect_user_location("我在宿舍")[0], "bedroom")
         self.assertIsNone(detect_user_location("今天好累"))
         self.assertEqual(detect_user_pose("我在家躺着"), "躺着")
+        self.assertEqual(detect_user_pose("我躺好了"), "躺好了")
         self.assertTrue(says_near_her("我就在你旁边啊"))
         self.assertFalse(says_near_her("你旁边有人吗"))
+        self.assertTrue(user_arrives("我躺好了"))
+        self.assertTrue(
+            user_arrives("下了楼梯，走到房间，打开门，爬上床，抱紧莉莉的身体")
+        )
+        self.assertFalse(user_arrives("我还没到，在楼下"))
+        self.assertFalse(user_arrives("我这就过去"))
+        self.assertFalse(user_arrives("我到了楼下"))
+        self.assertTrue(says_not_there("我还没回来卧室"))
+        self.assertTrue(says_not_there("我还在楼下"))
 
     def test_pose_shows_only_when_user_said_it(self) -> None:
         state = make_state()
